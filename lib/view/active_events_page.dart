@@ -98,65 +98,73 @@ class _ActiveEventsState extends State<ActiveEvents> {
       int hour = int.parse(date.substring(9, 11));
       DateTime endTime = DateTime.utc(year, month, day, hour);
       Duration remainingTime = endTime.difference(DateTime.now().toUtc());
-      int remainingMinutes = remainingTime.inMinutes;
-      int remainingHours = remainingMinutes ~/ 60;
-      remainingMinutes = remainingMinutes % 60;
+      int remainingHours, remainingMinutes;
+      if(remainingTime.isNegative){
+        remainingHours = 0;
+        remainingMinutes = 0;
+      } else {
+        remainingMinutes = remainingTime.inMinutes;
+        remainingHours = remainingMinutes ~/ 60;
+        remainingMinutes = remainingMinutes % 60;
+      }
 
       String iconUrl = (iconUrls.containsKey(snapshot.data[i]["event"]["mode"])
           ? iconUrls[snapshot.data[i]["event"]["mode"]]
           : iconUrls["unknown"]);
 
-      events.add(Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: (MediaQuery.of(context).size.width * 0.9),
-                height: 200,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                      color: Color.fromARGB(255, 10, 10, 10), width: 3.0),
-                  color: const Color.fromARGB(255, 88, 149, 241),
-                  borderRadius: const BorderRadius.only(
-                    topRight: Radius.circular(40.0),
-                    bottomRight: Radius.circular(40.0),
-                    topLeft: Radius.circular(40.0),
-                    bottomLeft: Radius.circular(40.0),
+      if (snapshot.data[i]["event"]["mode"] != "duoShowdown") {
+        events.add(Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: (MediaQuery.of(context).size.width * 0.9),
+                  height: 200,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Color.fromARGB(255, 10, 10, 10), width: 3.0),
+                    color: const Color.fromARGB(255, 88, 149, 241),
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(40.0),
+                      bottomRight: Radius.circular(40.0),
+                      topLeft: Radius.circular(40.0),
+                      bottomLeft: Radius.circular(40.0),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Image.network(
+                        iconUrl,
+                        width: 100.0,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "${snapshot.data[i]["event"]["map"]}",
+                            style: const TextStyle(
+                                color: Color.fromARGB(255, 240, 240, 240),
+                                fontSize: 30),
+                          ),
+                          Text(
+                            "${remainingHours}h${remainingMinutes}m restando.",
+                            style: const TextStyle(
+                                color: Color.fromARGB(255, 240, 240, 240),
+                                fontSize: 20),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Image.network(
-                      iconUrl,
-                      width: 100.0,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "${snapshot.data[i]["event"]["map"]}",
-                          style: const TextStyle(
-                              color: Color.fromARGB(255, 240, 240, 240),
-                              fontSize: 30),
-                        ),
-                        Text(
-                          "${remainingHours}h${remainingMinutes}m restando.",
-                          style: const TextStyle(
-                              color: Color.fromARGB(255, 240, 240, 240),
-                              fontSize: 20),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const Padding(padding: EdgeInsets.only(bottom: 10.0))
-        ],
-      ));
+              ],
+            ),
+            const Padding(padding: EdgeInsets.only(bottom: 10.0))
+          ],
+        ));
+      }
     }
     return Column(
       children: events,

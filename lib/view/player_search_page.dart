@@ -29,6 +29,7 @@ class _PlayerSearchPageState extends State<PlayerSearchPage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          const Padding(padding: EdgeInsets.all(5.0)),
           TextField(
             decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -78,13 +79,103 @@ class _PlayerSearchPageState extends State<PlayerSearchPage> {
 
   Widget showResults(BuildContext context, AsyncSnapshot snapshot) {
     // print(tag);
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Text(snapshot.data["name"]),
-        Text("${snapshot.data["trophies"]} troféus"),
-        Text("${snapshot.data["brawlers"].length} brawlers"),
-      ],
-    );
+    if (tag != "") {
+      if (snapshot.hasData && snapshot.data.containsKey("name")) {
+        return Builder(
+          builder: (context) {
+            return SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Padding(padding: EdgeInsets.all(10.0)),
+                  Image.network(
+                    "https://cdn.brawlify.com/profile-icons/regular/${snapshot.data["icon"]["id"]}.png",
+                    width: 300.0,
+                  ),
+                  const Padding(padding: EdgeInsets.all(10.0)),
+                  Text(
+                    snapshot.data["name"],
+                    style: TextStyle(fontSize: 50),
+                  ),
+                  const Padding(padding: EdgeInsets.all(20.0)),
+                  Text(
+                    "${snapshot.data["trophies"]} troféus",
+                    style: const TextStyle(fontSize: 30),
+                  ),
+                  Text(
+                    "${snapshot.data["brawlers"].length} brawlers",
+                    style: const TextStyle(fontSize: 30),
+                  ),
+                  const Padding(padding: EdgeInsets.all(20.0)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        width: (MediaQuery.of(context).size.width * 0.3),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "${snapshot.data["3vs3Victories"]}",
+                              style: const TextStyle(fontSize: 25),
+                            ),
+                            const Text(
+                              "Vitórias 3x3",
+                              style: TextStyle(fontSize: 15),
+                            )
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: (MediaQuery.of(context).size.width * 0.3),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "${snapshot.data["soloVictories"]}",
+                              style: const TextStyle(fontSize: 25),
+                            ),
+                            const Text(
+                              "Vitórias solo",
+                              style: TextStyle(fontSize: 15),
+                            )
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: (MediaQuery.of(context).size.width * 0.3),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "${snapshot.data["duoVictories"]}",
+                              style: const TextStyle(fontSize: 25),
+                            ),
+                            const Text(
+                              "Vitórias em dupla",
+                              style: TextStyle(fontSize: 15),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      }
+      return Column(
+        children: const [
+          Text(
+            "Tag inválida!",
+            style: TextStyle(
+                color: Color.fromARGB(255, 240, 10, 10), fontSize: 25),
+          ),
+        ],
+      );
+    }
+    return Container();
   }
 }
