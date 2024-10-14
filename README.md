@@ -1,6 +1,6 @@
 # brawl_stars_api
 
-A new Flutter project.
+Mobile project using the Brawl Stars API, retrieving the current events and player information.
 
 ## Getting Started
 
