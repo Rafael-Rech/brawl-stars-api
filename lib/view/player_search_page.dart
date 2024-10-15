@@ -78,9 +78,17 @@ class _PlayerSearchPageState extends State<PlayerSearchPage> {
   }
 
   Widget showResults(BuildContext context, AsyncSnapshot snapshot) {
-    // print(tag);
     if (tag != "") {
       if (snapshot.hasData && snapshot.data.containsKey("name")) {
+        Widget pfp;
+        try {
+          pfp = Image.network(
+            "https://cdn.brawlify.com/profile-icons/regular/${snapshot.data["icon"]["id"]}.png",
+            width: 300.0,
+          );
+        } catch (e) {
+          pfp = Container();
+        }
         return Builder(
           builder: (context) {
             return SingleChildScrollView(
@@ -88,10 +96,12 @@ class _PlayerSearchPageState extends State<PlayerSearchPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Padding(padding: EdgeInsets.all(10.0)),
-                  Image.network(
-                    "https://cdn.brawlify.com/profile-icons/regular/${snapshot.data["icon"]["id"]}.png",
-                    width: 300.0,
-                  ),
+                  pfp.runtimeType == Image
+                      ? pfp
+                      : Image.network(
+                          "https://cdn.brawlify.com/profile-icons/regular/28000000.png",
+                          width: 300.0,
+                        ),
                   const Padding(padding: EdgeInsets.all(10.0)),
                   Text(
                     snapshot.data["name"],

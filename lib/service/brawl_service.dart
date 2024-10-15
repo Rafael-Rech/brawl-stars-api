@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 // final String baseAddress = "https://api.brawlstars.com/v1";
-// final String token = "Bearer token"
+// final String token = "Bearer token";
 
 Future<Map> getPlayerInfo(String tag) async {
   if (tag != "") {
